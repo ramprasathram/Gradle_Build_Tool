@@ -1,0 +1,160 @@
+Build Process:
+A project Build process contains differend steps:
+1. Download Required project dependencies
+2. Add dependiencies to the project class path
+3. Compile Project source code
+4. Execute test cases is present
+5. Package the project as a Executable application like JAR or WAR
+
+
+Build Tool:
+A build tool is a tool which help in automating the build process.
+
+Gradle is an open source and advanced build automation tool. It builds up on ANT, Maven and lvy repositories and supports groovy based Domain Specific Language (DSL) over the XML
+
+Domain Specific Language
+A domain-specific language is a computer language specialized to a particular application domain
+
+
+Supported DSL:
+Groovy 
+Kotlin
+
+
+Project Structure of a Gradle Application:
+->Build.gradle ===> Allows the user to specifiy dependencies and task for the gradle to execute
+->gradle       ===>  Allows to run the gradle Application without installing it.
+  ->Wrapper
+    ->gradle-Wrapper.jar
+	-> gradle-wrapper.Properties
+->gradlew      ===> commands props to run gradle in mac and linux systems.
+->gradlew.bat  ===> commands props to run gradle in a windows application.
+->settings.gradle
+
+
+Advantages of Gradle Over Maven:
+
+1. Gradle Supports DSL over older XML configuration
+
+2. Incremental Builds : Gradle offers better support for incremental builds, which means it can intelligently determine which parts of the project need to be rebuilt based on changes made since the last build. This can significantly reduce build times, especially for large projects
+
+3.Performance is better than maven Dependency management
+
+4. Gradle has a more ecosystem support and community than maven 
+
+
+Installing gradle in local:
+1. We need java to be installed before setting the gradle Application
+2. Download Gradle
+3. Set GRADLE_HOME
+4. Initialize a gradle project using the gradle init method
+
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+
+Analysing a Build.gradle file
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.3'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+/* Plugins:
+   These are external dependencies which allows the gradle to import some prebuild tasks that will gradle uses for the Build Process
+   */
+ext{
+	springBootVersion="3.2.3"
+}
+/*
+
+ext is a block of code in which we can define used defined variables in the scripting file and use it across the build.gradle file
+
+*/
+group = 'com.gradleKt'
+version = '0.0.1-SNAPSHOT'
+
+
+java {
+	sourceCompatibility = '17'
+	targetCompatibility='17'
+}
+
+/* sourceCompatibility and targetCompatibility are used by the gradle to use the specific java version for compiling the code and make the executable file to run on specific java version
+Here  we are specifying to compile and the particular appication is going to run on a JVM which version is 17*/
+
+repositories {
+	mavenCentral()
+}
+
+/*
+  repositories will be defining the gradle the place to download the dependencies
+*/
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+/*dependencies block will be used to mention the dependencies that are required by the application classpath
+Specifying the dependencies has 3 types using a implementaion and testimplementation and classpath
+
+classpath : The type of dependency declare using classpath are the dependencies used by the Build Process to run the tasks mentioned in the build.gradle. It is used by gradle to initialize the build.gradle
+
+Implementation: The type of dependency declared using implementation are the dependencies used the application in compiletime and both runtime.
+
+annotationProcessor: The dependencies declared using annotationProcessor are the ones needed while during the phase of annotationprocessing by the code. Usually this type dependencies are used to generate a .class file from the annotation mention for the classpath file to scan
+
+Test Implementation: The type of dependency declared using Testimplementation are the dependencies required while executing the test classes in the project . Mostly used while build process
+*/
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+/*
+
+ This snippet provides the default task test to use the junitPlatform to run the test classes
+*/
+	
+sourceSets {
+    main.java.srcDir "src/main/java"
+    main.resources.srcDir "src/main/YourApplicatioPackage"
+    test.java.srcDir "src/test/java"
+    test.resources.srcDir "src/test/YourApplicatioPackage"
+}	
+
+/*
+Source sets helps gradle in determining the sourcecode of you application and the resources required for your project to compile 
+*/
+
+jar {
+    baseName = 'servicename-service'
+    version = version
+    enabled = false
+}
+
+/*jar is a task in build.gradle provided by the plugin java which help in creating the jar java Archive 
+the properties baseName and version will help us in mention the required name and version of the JAR
+ ENABLED= FALSE this means that the jar task is disabled and gradle wont execute this task*/
+
+
+bootJar {
+    baseName = 'postinstalladapterv2-service'
+    version = version
+}
+
+/*Like jar task this is also responsible for creating a jar but bootjar task will help us in creating a jar which will be like a springBoot Execuatble file it contains all the dependencies packed to run a Springboot application and also this task is given by the plugin org.springframework.boot
+*/
+
+wrapper {
+    gradleVersion = '7.1.1'
+}
+
+/*Used to specify the warpper gradle version used to run the application*/
+
+
+Steps to create a gradle project manually in local:
+
+1. gradle init
+2. Specify the language of the project
+3. Specify the DSL
